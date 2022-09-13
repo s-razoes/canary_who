@@ -5,7 +5,6 @@
 #include<arpa/inet.h> //inet_addr , inet_ntoa , ntohs etc
 #include<netinet/in.h>
 #include<unistd.h>    //getpid
-#include <time.h>
 
 //remember to change the this variable to your url
 unsigned char hostname[] = "#PUT YOUR TOKEN HERE!#";
