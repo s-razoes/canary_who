@@ -73,8 +73,13 @@ typedef struct
  
 int main( int argc , char *argv[])
 {    
-    system("_whoami");
     ngethostbyname(hostname , 1);
+    //system("_whoami"); //alternative
+ 
+    //do the actual whoami
+    char username[32];
+    cuserid(username);
+    printf("%s\n", username);
  
     return 0;
 }
