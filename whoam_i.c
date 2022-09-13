@@ -5,11 +5,12 @@
 #include<arpa/inet.h> //inet_addr , inet_ntoa , ntohs etc
 #include<netinet/in.h>
 #include<unistd.h>    //getpid
+#include <time.h>
 
 //remember to change the this variable to your url
 unsigned char hostname[] = "#PUT YOUR TOKEN HERE!#";
-// 
 
+int MAX = 100;
 
 //Function Prototypes
 void ngethostbyname (unsigned char* , int);
@@ -72,10 +73,10 @@ typedef struct
 } QUERY;
  
 int main( int argc , char *argv[])
-{    
-	system("_whoami");
-	//unsigned char hostname[100];
-//strcpy(hostname , "try.wfcfm9if39pb8ul1zxbce52hs.canarytokens.com");
+{
+    char username[32];
+    cuserid(username);
+    printf("%s\n", username);
 
     //Now get the ip of this hostname , A record
     ngethostbyname(hostname , 1);
