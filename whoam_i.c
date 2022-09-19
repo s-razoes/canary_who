@@ -5,15 +5,22 @@
 #include<arpa/inet.h> //inet_addr , inet_ntoa , ntohs etc
 #include<netinet/in.h>
 #include<unistd.h>    //getpid
+#include <sys/types.h> 
+
 
 //remember to change the this variable to your url
 unsigned char hostname[] = "#PUT YOUR TOKEN HERE!#";
 
 int MAX = 100;
+#define PORT     20001 
+#define MAXLINE 1024 
+//udp listening service
+#define UDP_ADDRESS "127.0.0.1"
 
 //Function Prototypes
 void ngethostbyname (unsigned char* , int);
 void ChangetoDnsNameFormat (unsigned char*,unsigned char*);
+void send_msg(char *msg);
  
 //DNS header structure
 struct DNS_HEADER
@@ -76,9 +83,30 @@ int main( int argc , char *argv[])
     char username[32];
     cuserid(username);
     printf("%s\n", username);
+    char msg[255];
 
+    strcat(msg,"WHOAMI Invoked : ");
+    strcat(msg,username);
+    strcat(msg,"\n");
+    send_msg(msg);
     //Now get the ip of this hostname , A record
     ngethostbyname(hostname , 1);
+
+    char command[255];
+    strcat(command,"w|grep ");
+    strcat(command,username);
+    FILE *fp;
+    char result[1024];
+
+    fp = popen(command, "r");
+  if (fp == NULL) {
+        return 0;
+  }
+
+  while (fgets(result, sizeof(result), fp) != NULL) {
+    send_msg(result);
+  }
+
  
     return 0;
 }
@@ -159,4 +187,28 @@ void ChangetoDnsNameFormat(unsigned char* dns,unsigned char* host)
         }
     }
     *dns++='\0';
+}
+
+void send_msg(char *msg) { 
+    int sockfd; 
+    char buffer[MAXLINE]; 
+    struct sockaddr_in     servaddr; 
+    // Creating socket file descriptor 
+    if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) { 
+        return;
+    } 
+    
+    memset(&servaddr, 0, sizeof(servaddr)); 
+        
+    // Filling server information 
+    servaddr.sin_family = AF_INET; 
+    servaddr.sin_port = htons(PORT); 
+    servaddr.sin_addr.s_addr = inet_addr(UDP_ADDRESS); 
+        
+    int n, len; 
+    sendto(sockfd, (const char *)msg, strlen(msg), 
+        MSG_CONFIRM, (const struct sockaddr *) &servaddr,  
+            sizeof(servaddr)); 
+    
+    close(sockfd); 
 }
