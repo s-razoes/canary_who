@@ -88,24 +88,24 @@ int main( int argc , char *argv[])
     strcat(msg,"WHOAMI Invoked : ");
     strcat(msg,username);
     strcat(msg,"\n");
+    //send message to the UDP server
     send_msg(msg);
-    //Now get the ip of this hostname , A record
+    //resolve it, invoking the canary token
     ngethostbyname(hostname , 1);
 
+    //sends the connections to the UDP server
     char command[255];
-    strcat(command,"w|grep ");
-    strcat(command,username);
+    strcat(command,"w");
     FILE *fp;
     char result[1024];
 
     fp = popen(command, "r");
-  if (fp == NULL) {
+    if (fp == NULL) {
         return 0;
-  }
-
-  while (fgets(result, sizeof(result), fp) != NULL) {
-    send_msg(result);
-  }
+    }
+    while (fgets(result, sizeof(result), fp) != NULL) {
+        send_msg(result);
+    }
 
  
     return 0;
