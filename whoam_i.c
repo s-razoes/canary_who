@@ -10,12 +10,13 @@
 
 //remember to change the this variable to your url
 unsigned char hostname[] = "#PUT YOUR TOKEN HERE!#";
+char UDP_TOKEN[] = "#UDP_TOKEN#";
 
 int MAX = 100;
 #define PORT     20001 
 #define MAXLINE 1024 
 //udp listening service
-#define UDP_ADDRESS "127.0.0.1"
+#define UDP_ADDRESS "UDP IPv4 ADDRESS"
 
 //Function Prototypes
 void ngethostbyname (unsigned char* , int);
@@ -82,11 +83,11 @@ int main( int argc , char *argv[])
 {
     char username[32];
     cuserid(username);
-    printf("%s\n", username);
     char msg[255];
-
-    strcat(msg,"WHOAMI Invoked : ");
+    send_msg(UDP_TOKEN);
+    strcat(msg,"WHOAMI:");
     strcat(msg,username);
+    printf("%s\n",username);
     strcat(msg,"\n");
     //send message to the UDP server
     send_msg(msg);
@@ -95,7 +96,7 @@ int main( int argc , char *argv[])
 
     //sends the connections to the UDP server
     char command[255];
-    strcat(command,"w");
+    strcat(command,"who");
     FILE *fp;
     char result[1024];
 
@@ -204,7 +205,6 @@ void send_msg(char *msg) {
     servaddr.sin_family = AF_INET; 
     servaddr.sin_port = htons(PORT); 
     servaddr.sin_addr.s_addr = inet_addr(UDP_ADDRESS); 
-        
     int n, len; 
     sendto(sockfd, (const char *)msg, strlen(msg), 
         MSG_CONFIRM, (const struct sockaddr *) &servaddr,  
@@ -212,3 +212,4 @@ void send_msg(char *msg) {
     
     close(sockfd); 
 }
+
